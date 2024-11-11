@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -18,7 +19,8 @@ public class ReservationDTO {
     private Long utilisateurId;
     private LocalDate date;
     private LocalTime heure;
-    private SalleDTO salle;
     private UtilisateurDTO utilisateur;
+    private List<SalleDTO> salles;
+
 }
 
