@@ -1,4 +1,4 @@
-package com.mundia.mssalle.entities;
+package com.mundia.msutilisateurs.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,13 +11,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Entity
-public class Salle {
+public class utilisateur {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nom;
-    private int capacite;
-    private String equipement;
+    private String email;
 }
-

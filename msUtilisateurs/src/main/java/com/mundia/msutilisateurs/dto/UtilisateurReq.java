@@ -1,4 +1,4 @@
-package com.mundia.mssalle.dto;
+package com.mundia.msutilisateurs.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SalleDTO {
-    private Long id;
+public class UtilisateurReq {
     private String nom;
-    private int capacite;
-    private String equipement;
+    private String email;
 }
