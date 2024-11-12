@@ -19,7 +19,7 @@ public class ReservationDTO {
     private Long utilisateurId;
     private LocalDate date;
     private LocalTime heure;
-    private UtilisateurDTO utilisateur;
+    private List<UtilisateurDTO> utilisateurs;
     private List<SalleDTO> salles;
 
 }

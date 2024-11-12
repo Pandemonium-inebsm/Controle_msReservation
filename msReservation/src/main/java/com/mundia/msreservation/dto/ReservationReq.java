@@ -14,11 +14,11 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class ReservationReq {
-    private Long salleId;
-    private Long utilisateurId;
+
     private LocalDate date;
     private LocalTime heure;
     private List<Long> salleIDS;
+    private List<Long> userIDS;
 
 }
 

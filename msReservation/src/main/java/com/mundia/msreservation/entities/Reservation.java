@@ -18,7 +18,6 @@ public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private Long salleId;
     private Long utilisateurId;
     private LocalDate date;
