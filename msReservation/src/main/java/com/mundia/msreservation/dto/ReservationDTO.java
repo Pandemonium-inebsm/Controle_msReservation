@@ -15,12 +15,9 @@ import java.util.List;
 @Builder
 public class ReservationDTO {
     private Long id;
-    private Long salleId;
-    private Long utilisateurId;
     private LocalDate date;
     private LocalTime heure;
+    private List<SalleDTO> salles;          // Liste de salles
     private List<UtilisateurDTO> utilisateurs;
-    private List<SalleDTO> salles;
-
 }
 
