@@ -1,4 +1,4 @@
-package com.mundia.msreservation.dto;
+package com.mundia.msutilisateurs.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -17,7 +16,6 @@ public class ReservationDTO {
     private Long id;
     private LocalDate date;
     private LocalTime heure;
-    private List<SalleDTO> salles;
-    private List<UtilisateurDTO> utilisateurs;
+
 }
 

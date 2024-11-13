@@ -39,8 +39,24 @@ public class ReservationController {
     }
     // Delete an salle by ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSalle(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteReservation(@PathVariable Long id) {
         reservationService.deleteReservation(id);
         return ResponseEntity.noContent().build();
     }
+    //-----------Reservation avec salle et utilisateur------------
+    @GetMapping("/reservationSalleUser/{id}")
+    public ReservationDTO getReservationAvecSalleEtUtilisateur(@PathVariable Long id) {
+        return reservationService.getReservationAvecSalleEtUtilisateur(id);
+    }
+    //-----------reservation par isDalle------------
+    @GetMapping("/reservationbyidsalle/{id}")
+    public List<Reservation> getReservationbySalleId(@PathVariable Long id) {
+        return reservationService.getReservationbySalleId(id);
+    }
+    //-----------reservation par isDalle------------
+    @GetMapping("/reservationbyiduser/{id}")
+    public List<Reservation> getReservationbyUserId(@PathVariable Long id) {
+        return reservationService.getReservationbyUserId(id);
+    }
+
 }

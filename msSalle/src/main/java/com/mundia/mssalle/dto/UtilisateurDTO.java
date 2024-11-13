@@ -1,11 +1,9 @@
-package com.mundia.msutilisateurs.dto;
+package com.mundia.mssalle.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -15,6 +13,4 @@ public class UtilisateurDTO {
     private Long id;
     private String nom;
     private String email;
-    private List<ReservationDTO> reservations;
-
 }

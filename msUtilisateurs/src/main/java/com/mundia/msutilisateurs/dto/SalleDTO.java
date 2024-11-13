@@ -11,10 +11,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UtilisateurDTO {
+
+public class SalleDTO  {
     private Long id;
     private String nom;
-    private String email;
-    private List<ReservationDTO> reservations;
-
+    private int capacite;
+    private String equipement;
 }

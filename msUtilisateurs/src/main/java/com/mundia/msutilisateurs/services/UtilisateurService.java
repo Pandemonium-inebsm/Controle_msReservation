@@ -16,5 +16,6 @@ public interface UtilisateurService {
     UtilisateurDTO updateUtilisateur(Long id, UtilisateurDTO utilisateurDTO);
     void deleteUtilisateur(Long id);
 
+    UtilisateurDTO getReservationDTOById(Long id);
 
 }

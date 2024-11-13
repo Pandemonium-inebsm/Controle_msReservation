@@ -44,4 +44,11 @@ public class UtilsateurController {
         utilisateurService.deleteUtilisateur(id);
         return ResponseEntity.noContent().build();
     }
+
+    //----------------------------------------
+    @GetMapping("/userReservation/{id}")
+    public UtilisateurDTO getUserWithReserv(@PathVariable Long id) {
+        return utilisateurService.getReservationDTOById(id);
+    }
+
 }

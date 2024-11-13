@@ -43,4 +43,9 @@ public class SalleController {
         salleService.deleteSalle(id);
         return ResponseEntity.noContent().build();
     }
+    //----------------------------------------
+    @GetMapping("/SalleReservation/{id}")
+    public SalleDTO getSalleWithReserv(@PathVariable Long id) {
+        return salleService.getReservationDTOById(id);
+    }
 }

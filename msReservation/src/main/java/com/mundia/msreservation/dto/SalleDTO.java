@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class SalleDTO {
     private Long id;
     private String nom;
-    private int capacité;
-    private String équipement;
+    private int capacite;
+    private String equipement;
 }
