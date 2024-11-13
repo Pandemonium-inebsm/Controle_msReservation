@@ -59,26 +59,23 @@ public class ReservationServiceImpl implements ReservationService{
 
 
     @Override
-    public ReservationDTO updateReservation(Long id, ReservationDTO reservationDTO) {
-//        // Vérifier si la réservation avec l'ID donné existe
-//        Reservation existingReservation = reservationRepo.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Réservation non trouvée avec l'ID : " + id));
-//
-//        // Mettre à jour les champs de la réservation existante avec les nouvelles données
-//        existingReservation.setDate(reservationDTO.getDate());
-//        existingReservation.setHeure(reservationDTO.getHeure());
-//
-//        // Si vous avez besoin de mettre à jour les IDs de salle et d'utilisateur
-//        existingReservation.setSallesIds(reservationDTO.getSalles().get(0).getId());  // Exemple pour une seule salle
-//        existingReservation.setUtilisateurId(reservationDTO.getUtilisateurs().get(0).getId());  // Exemple pour un seul utilisateur
-//
-//        // Sauvegarder la réservation mise à jour
-//        Reservation updatedReservation = reservationRepo.save(existingReservation);
-//
-//        // Convertir l'entité mise à jour en DTO
-//        return reservationMapper.ToDTO(updatedReservation);
-        return null;
+    public Reservation updateReservation(Long reservationId, ReservationReq reservationReq) {
+        // Recherche de la réservation existante par son ID
+        Reservation existingReservation = reservationRepo.findById(reservationId)
+                .orElseThrow(() -> new RuntimeException("Reservation not found with id " + reservationId));
+
+        // Mise à jour des champs de la réservation existante avec les nouvelles valeurs
+        existingReservation.setDate(reservationReq.getDate());
+        existingReservation.setHeure(reservationReq.getHeure());
+        existingReservation.setSallesIds(reservationReq.getSallesIds());
+        existingReservation.setUtilisateurId(reservationReq.getUtilisateurId());
+
+        // Sauvegarde de la réservation mise à jour
+        reservationRepo.save(existingReservation);
+
+        return existingReservation;
     }
+
 
 
 

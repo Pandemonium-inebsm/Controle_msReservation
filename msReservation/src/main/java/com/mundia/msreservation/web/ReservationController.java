@@ -33,8 +33,8 @@ public class ReservationController {
     }
     //---------------------------
     @PutMapping("/{id}")
-    public ResponseEntity<ReservationDTO> updateReservation(@PathVariable Long id, @RequestBody ReservationDTO reservationDTO) {
-        ReservationDTO updatedReservation = reservationService.updateReservation(id, reservationDTO);
+    public ResponseEntity<Reservation> updateReservation(@PathVariable Long id, @RequestBody ReservationReq reservationReq) {
+        Reservation updatedReservation = reservationService.updateReservation(id, reservationReq);
         return ResponseEntity.ok(updatedReservation);
     }
     // Delete an salle by ID
