@@ -50,12 +50,12 @@ public class ReservationController {
     }
     //-----------reservation par isDalle------------
     @GetMapping("/reservationbyidsalle/{id}")
-    public List<Reservation> getReservationbySalleId(@PathVariable Long id) {
+    public List<ReservationDTO> getReservationbySalleId(@PathVariable Long id) {
         return reservationService.getReservationbySalleId(id);
     }
     //-----------reservation par isDalle------------
     @GetMapping("/reservationbyiduser/{id}")
-    public List<Reservation> getReservationbyUserId(@PathVariable Long id) {
+    public List<ReservationDTO> getReservationbyUserId(@PathVariable Long id) {
         return reservationService.getReservationbyUserId(id);
     }
 

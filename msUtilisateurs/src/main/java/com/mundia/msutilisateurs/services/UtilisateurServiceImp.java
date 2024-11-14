@@ -2,6 +2,7 @@ package com.mundia.msutilisateurs.services;
 
 
 import com.mundia.msutilisateurs.dto.ReservationDTO;
+import com.mundia.msutilisateurs.dto.SalleDTO;
 import com.mundia.msutilisateurs.dto.UtilisateurDTO;
 import com.mundia.msutilisateurs.dto.UtilisateurReq;
 import com.mundia.msutilisateurs.entities.Utilisateur;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,21 +71,25 @@ public class UtilisateurServiceImp implements UtilisateurService {
 
     @Override
     public UtilisateurDTO getReservationDTOById(Long id) {
+        // Récupération de l'utilisateur
         Utilisateur utilisateur = getUtilisateurById(id);
+
+        // Récupération des réservations liées à cet utilisateur
         ReservationDTO[] reservationDTOS = webClient.get()
-                .uri("http://MSRESERVATION/api/reservation/reservationbyiduser/"+id)
+                .uri("http://MSRESERVATION/api/reservation/reservationbyiduser/" + id)
                 .retrieve()
                 .bodyToMono(ReservationDTO[].class)
                 .share()
                 .block();
 
-        //---------------------------------------------
+        // Préparer l'objet UtilisateurDTO
         UtilisateurDTO utilisateurDTO = new UtilisateurDTO();
         BeanUtils.copyProperties(utilisateur, utilisateurDTO);
         utilisateurDTO.setReservations(Arrays.asList(reservationDTOS));
 
         return utilisateurDTO;
-
     }
+
+
 
 }

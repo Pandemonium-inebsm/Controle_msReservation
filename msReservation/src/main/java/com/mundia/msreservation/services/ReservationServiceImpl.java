@@ -14,10 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -109,16 +106,67 @@ public class ReservationServiceImpl implements ReservationService{
     }
     //--------------------------------------------
     @Override
-    public List<Reservation> getReservationbySalleId(Long id) {
+    public List<ReservationDTO> getReservationbySalleId(Long salleId) {
+        // Récupération des réservations ayant l'ID de la salle spécifié
+        List<Reservation> reservations = reservationRepo.findAllBySallesIds(salleId);
 
-        return reservationRepo.findAllBySallesIds(id);
+        // Transformation en DTO avec récupération des informations utilisateur
+        List<ReservationDTO> reservationDTOs = new ArrayList<>();
+
+        for (Reservation reservation : reservations) {
+            // Récupération de l'utilisateur pour chaque réservation
+            UtilisateurDTO utilisateurDTO = webClient.get()
+                    .uri("http://MSUTILISATEURS/api/utilisateur/" + reservation.getUtilisateurId())
+                    .retrieve()
+                    .bodyToMono(UtilisateurDTO.class)
+                    .block();
+
+            // Préparation de l'objet ReservationDTO
+            ReservationDTO reservationDTO = new ReservationDTO();
+            BeanUtils.copyProperties(reservation, reservationDTO);
+
+            // Affectation de l'utilisateur dans le DTO
+            reservationDTO.setUtilisateurs(Collections.singletonList(utilisateurDTO));
+
+            // Ajout du DTO à la liste finale
+            reservationDTOs.add(reservationDTO);
+        }
+
+        return reservationDTOs;
     }
+
+
     //--------------------------------------------
     @Override
-    public List<Reservation> getReservationbyUserId(Long id) {
+    public List<ReservationDTO> getReservationbyUserId(Long userId) {
+        // Récupération des réservations ayant l'ID de l'utilisateur spécifié
+        List<Reservation> reservations = reservationRepo.findAllByUtilisateurId(userId);
 
-        return reservationRepo.findAllByUtilisateurId(id);
+        // Transformation en DTO avec récupération des informations de salle
+        List<ReservationDTO> reservationDTOs = new ArrayList<>();
+
+        for (Reservation reservation : reservations) {
+            // Récupération de la salle pour chaque réservation
+            SalleDTO salleDTO = webClient.get()
+                    .uri("http://MSSALLE/api/salle/" + reservation.getSallesIds())
+                    .retrieve()
+                    .bodyToMono(SalleDTO.class)
+                    .block();
+
+            // Préparation de l'objet ReservationDTO
+            ReservationDTO reservationDTO = new ReservationDTO();
+            BeanUtils.copyProperties(reservation, reservationDTO);
+
+            // Affectation de la salle dans le DTO
+            reservationDTO.setSalles(Collections.singletonList(salleDTO));
+
+            // Ajout du DTO à la liste finale
+            reservationDTOs.add(reservationDTO);
+        }
+
+        return reservationDTOs;
     }
+
 
 
 }

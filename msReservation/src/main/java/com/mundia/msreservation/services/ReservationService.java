@@ -13,7 +13,7 @@ public interface ReservationService {
     Reservation updateReservation(Long id, ReservationReq reservationReq);
     void deleteReservation(Long id);
     ReservationDTO getReservationAvecSalleEtUtilisateur(Long id);
-    List<Reservation> getReservationbySalleId(Long id);
+    List<ReservationDTO> getReservationbySalleId(Long id);
 
-    List<Reservation> getReservationbyUserId(Long id);
+    List<ReservationDTO> getReservationbyUserId(Long id);
 }

@@ -10,6 +10,7 @@ import com.mundia.mssalle.repositories.SalleRepo;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -66,24 +67,27 @@ public class SalleServiceImpl implements SalleService{
         salleRepo.delete(salle);
     }
     //-----------------------------------------------------
-
     @Override
     public SalleDTO getReservationDTOById(Long id) {
+        // Récupération de la salle
         Salle salle = getSalleById(id);
+
+        // Récupération des réservations liées à cette salle
         ReservationDTO[] reservationDTOS = webClient.get()
-                .uri("http://MSRESERVATION/api/reservation/reservationbyidsalle/"+id)
+                .uri("http://MSRESERVATION/api/reservation/reservationbyidsalle/" + id)
                 .retrieve()
                 .bodyToMono(ReservationDTO[].class)
                 .share()
                 .block();
 
-        //---------------------------------------------
+
+        // Préparer l'objet SalleDTO
         SalleDTO salleDTO = new SalleDTO();
         BeanUtils.copyProperties(salle, salleDTO);
         salleDTO.setReservations(Arrays.asList(reservationDTOS));
 
         return salleDTO;
-
     }
+
 
 }
