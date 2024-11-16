@@ -49,7 +49,7 @@ const Login = () => {
         const response = await axios_client.post(endpoint, {
           email: formData.email,
           password: formData.password,
-          ...(isLogin ? {} : { nom: formData.nom, prenom: formData.prenom, role: formData.role }),
+          ...(isLogin ? {} : { nom: formData.nom, prenom: formData.prenom,  }),
         });
       
         if (isLogin) {
@@ -133,14 +133,14 @@ const Login = () => {
                   onChange={handleChange}
                 />
               </Form.Group>
-
-              {!isLogin && (
+{!isLogin && (
                 <Form.Group controlId="formRole" className="mb-3">
                   <Form.Label>Rôle</Form.Label>
-                  <Form.Select name="role" value={formData.role} onChange={handleChange}>
-                    <option value="USER">Utilisateur</option>
-                    <option value="ADMIN">Administrateur</option>
-                  </Form.Select>
+                  <Form.Control
+                    type="text"
+                    value="Utilisateur" 
+                    disabled
+                  />
                 </Form.Group>
               )}
 
