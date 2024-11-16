@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Table, Button, Modal, Form } from "react-bootstrap";
 import { FaEdit, FaTrashAlt, FaPlus } from "react-icons/fa"; 
-
+import Swal from "sweetalert2";
+import Layout from "./Layout";
 import axios_client from "../config/host-app";
 
 const Utilisateur = () => {
@@ -13,43 +14,57 @@ const Utilisateur = () => {
     id: "",
   });
   const [editMode, setEditMode] = useState(false);
-
-  // Fonction pour récupérer la liste des utilisateurs
+  const token = localStorage.getItem("token");
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
   const fetchUtilisateurs = async () => {
     try {
-      const response = await axios_client.get("/api/utilisateur/utilisateurs");
+      const response = await axios_client.get("/api/utilisateur/utilisateurs",config);
       setUtilisateurs(response.data);
     } catch (err) {
       console.error("Error fetching utilisateurs:", err);
     }
   };
 
-  // Fonction pour ajouter ou modifier un utilisateur
   const saveUtilisateur = async () => {
     try {
       if (editMode) {
-        await axios_client.put(`/api/utilisateur/${modalData.id}`, modalData);
+        await axios_client.put(`/api/utilisateur/${modalData.id}`, modalData,config);
       } else {
-        await axios_client.post("/api/utilisateur/add", modalData);
+        await axios_client.post("/api/utilisateur/add", modalData,config);
       }
       setShowModal(false);
-      fetchUtilisateurs();  // Rafraîchir la liste des utilisateurs
+      fetchUtilisateurs();  
     } catch (err) {
       console.error("Error saving utilisateur:", err);
     }
   };
 
-  // Fonction pour supprimer un utilisateur
   const deleteUtilisateur = async (id) => {
-    try {
-      await axios_client.delete(`/api/utilisateur/${id}`);
-      fetchUtilisateurs();  // Rafraîchir la liste après la suppression
-    } catch (err) {
-      console.error("Error deleting utilisateur:", err);
-    }
+    Swal.fire({
+      title: "Êtes-vous sûr ?",
+      text: "Cette action est irréversible !",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Oui, supprimer",
+      cancelButtonText: "Annuler",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios_client.delete(`/api/utilisateur/${id}`,config);
+          fetchUtilisateurs();
+        } catch (err) {
+          console.error("Error deleting utilisateur:", err);
+        }
+      }
+    });
   };
 
-  // Fonction pour ouvrir le modal en mode ajout ou modification
   const handleShowModal = (utilisateur = null) => {
     setEditMode(!!utilisateur);
     setModalData(
@@ -64,12 +79,12 @@ const Utilisateur = () => {
 
   const handleCloseModal = () => setShowModal(false);
 
-  // Appeler la fonction fetchUtilisateurs à chaque chargement de la page
   useEffect(() => {
     fetchUtilisateurs();
   }, []);
 
   return (
+    <Layout>
     <div className="container mt-4">
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2>Liste des Utilisateurs</h2>
@@ -78,8 +93,8 @@ const Utilisateur = () => {
         </Button>
       </div>
 
-      <Table striped bordered hover>
-        <thead>
+      <Table striped bordered hover responsive className="text-center">
+      <thead className="table-primary">
           <tr>
             <th>Nom</th>
             <th>Email</th>
@@ -112,7 +127,6 @@ const Utilisateur = () => {
         </tbody>
       </Table>
 
-      {/* Modal pour Ajouter/Modifier Utilisateur */}
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>
@@ -137,7 +151,6 @@ const Utilisateur = () => {
                 onChange={(e) => setModalData({ ...modalData, email: e.target.value })}
               />
             </Form.Group>
-            {/* Vous pouvez ajouter d'autres champs ici */}
           </Form>
         </Modal.Body>
         <Modal.Footer>
@@ -150,6 +163,7 @@ const Utilisateur = () => {
         </Modal.Footer>
       </Modal>
     </div>
+    </Layout>
   );
 };
 

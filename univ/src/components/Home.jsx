@@ -1,39 +1,23 @@
 import React from "react";
-import { Navbar, Nav, Container, Button, Row, Col, Card } from "react-bootstrap";
+import { Button, Row, Col, Card, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import Layout from "./Layout"; 
 
 const Home = () => {
   return (
-    <>
-      {/* Navbar */}
-      <Navbar bg="dark" variant="dark" expand="lg">
-        <Container>
-          <Navbar.Brand as={Link} to="/">Réservation de salles de réunion</Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          {/* <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
-              <Nav.Link as={Link} to="/salle">Salle</Nav.Link> 
-              <Nav.Link as={Link} to="/utilisateurs">Utilisateurs</Nav.Link>
-              <Nav.Link as={Link} to="/reservation">Réservation</Nav.Link>
-            </Nav>
-          </Navbar.Collapse> */}
-        </Container>
-      </Navbar>
-
-      {/* Hero Section */}
+    <Layout>
       <div className="hero-section bg-primary text-white text-center py-5">
         <Container>
           <h1>Bienvenue dans le système de réservation de salles</h1>
           <p>Réservez facilement des salles de réunion pour vos événements professionnels</p>
-          {/* <Link to="/reservation">
+          <Link to="/reservation">
             <Button variant="light" size="lg">
               Réserver une Salle
             </Button>
-          </Link> */}
+          </Link>
         </Container>
       </div>
 
-      {/* Feature Section */}
       <Container className="my-5">
         <Row>
           <Col md={4}>
@@ -79,7 +63,7 @@ const Home = () => {
           </Col>
         </Row>
       </Container>
-    </>
+    </Layout>
   );
 };
 

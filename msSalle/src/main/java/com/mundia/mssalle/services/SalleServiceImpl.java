@@ -69,19 +69,13 @@ public class SalleServiceImpl implements SalleService{
     //-----------------------------------------------------
     @Override
     public SalleDTO getReservationDTOById(Long id) {
-        // Récupération de la salle
         Salle salle = getSalleById(id);
-
-        // Récupération des réservations liées à cette salle
         ReservationDTO[] reservationDTOS = webClient.get()
                 .uri("http://MSRESERVATION/api/reservation/reservationbyidsalle/" + id)
                 .retrieve()
                 .bodyToMono(ReservationDTO[].class)
                 .share()
                 .block();
-
-
-        // Préparer l'objet SalleDTO
         SalleDTO salleDTO = new SalleDTO();
         BeanUtils.copyProperties(salle, salleDTO);
         salleDTO.setReservations(Arrays.asList(reservationDTOS));

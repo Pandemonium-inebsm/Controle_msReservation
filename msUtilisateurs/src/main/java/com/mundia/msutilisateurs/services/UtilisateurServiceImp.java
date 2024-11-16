@@ -71,18 +71,13 @@ public class UtilisateurServiceImp implements UtilisateurService {
 
     @Override
     public UtilisateurDTO getReservationDTOById(Long id) {
-        // Récupération de l'utilisateur
         Utilisateur utilisateur = getUtilisateurById(id);
-
-        // Récupération des réservations liées à cet utilisateur
         ReservationDTO[] reservationDTOS = webClient.get()
                 .uri("http://MSRESERVATION/api/reservation/reservationbyiduser/" + id)
                 .retrieve()
                 .bodyToMono(ReservationDTO[].class)
                 .share()
                 .block();
-
-        // Préparer l'objet UtilisateurDTO
         UtilisateurDTO utilisateurDTO = new UtilisateurDTO();
         BeanUtils.copyProperties(utilisateur, utilisateurDTO);
         utilisateurDTO.setReservations(Arrays.asList(reservationDTOS));
