@@ -1,6 +1,6 @@
 # Système de Gestion de Réservations de Salles
 
-Ce projet est une application basée sur une architecture microservices pour gérer les réservations de salles. Il inclut des services pour la gestion des salles, des utilisateurs, des réservations, une passerelle API, un serveur de découverte (Eureka), et un système d'authentification.
+Ce projet est une application basée sur une architecture microservices pour gérer les réservations de salles. Il inclut des services pour la gestion des salles, des utilisateurs, des réservations, une passerelle API, un serveur de découverte (Eureka), et un système d'authentification  et une API tierce pour les taux de change.
 
 ## Table des matières
 1. [Architecture du Projet](#architecture-du-projet)
@@ -109,11 +109,7 @@ Un système de sécurité basé sur **JWT (JSON Web Token)** est utilisé pour a
 - PostgreSQL ou MySQL pour les bases de données des services.
 
 ### Étapes
-1. Clonez le projet :
-   ```bash
-   git clone https://github.com/votre-repo.git
-   cd votre-repo
-   ```
+1. Clonez le projet 
 2. Lancez le serveur Eureka 
 3. Lancez chaque service individuellement
 4. Lancez l'API Gateway
