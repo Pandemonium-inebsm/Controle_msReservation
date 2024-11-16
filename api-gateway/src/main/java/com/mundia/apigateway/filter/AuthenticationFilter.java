@@ -14,7 +14,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
     @Autowired
     JwtUtil jwtUtil;
     public static class Config {
-        private boolean enabled = true;
+        private boolean enabled = false;
 
         public boolean isEnabled() {
             return enabled;
