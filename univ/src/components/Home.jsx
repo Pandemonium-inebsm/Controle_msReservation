@@ -25,11 +25,11 @@ const Home = () => {
         <Container>
           <h1>Bienvenue dans le système de réservation de salles</h1>
           <p>Réservez facilement des salles de réunion pour vos événements professionnels</p>
-          <Link to="/reservation">
+          {/* <Link to="/reservation">
             <Button variant="light" size="lg">
               Réserver une Salle
             </Button>
-          </Link>
+          </Link> */}
         </Container>
       </div>
 
