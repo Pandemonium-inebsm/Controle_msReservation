@@ -11,9 +11,10 @@ Ce projet est une application basée sur une architecture microservices pour gé
 3. [API Gateway](#api-gateway)
 4. [Eureka Server](#eureka-server)
 5. [Authentification](#authentification)
-6. [Démarrage](#démarrage)
-7. [Endpoints](#endpoints)
-8. [Technologies Utilisées](#technologies-utilisées)
+6. [Exchange Rate API](#exchange-rate-api)
+7. [Démarrage](#démarrage)
+8. [Endpoints](#endpoints)
+9. [Technologies Utilisées](#technologies-utilisées)
 
 ---
 
