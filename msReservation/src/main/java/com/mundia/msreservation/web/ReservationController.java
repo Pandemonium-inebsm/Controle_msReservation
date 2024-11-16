@@ -28,7 +28,7 @@ public class ReservationController {
     }
     //-----------list----------------------------------
     @GetMapping("/reservations")
-    public List<Reservation> getReservations() {
+    public List<ReservationDTO> getReservations() {
         return reservationService.getAllReservation();
     }
     //---------------------------
@@ -43,11 +43,7 @@ public class ReservationController {
         reservationService.deleteReservation(id);
         return ResponseEntity.noContent().build();
     }
-    //-----------Reservation avec salle et utilisateur------------
-    @GetMapping("/reservationSalleUser/{id}")
-    public ReservationDTO getReservationAvecSalleEtUtilisateur(@PathVariable Long id) {
-        return reservationService.getReservationAvecSalleEtUtilisateur(id);
-    }
+
     //-----------reservation par isDalle------------
     @GetMapping("/reservationbyidsalle/{id}")
     public List<ReservationDTO> getReservationbySalleId(@PathVariable Long id) {

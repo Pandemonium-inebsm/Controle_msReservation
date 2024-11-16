@@ -34,11 +34,39 @@ public class ReservationServiceImpl implements ReservationService{
     }
     //------------------------------------------
     @Override
-    public List<Reservation> getAllReservation() {
+    public List<ReservationDTO> getAllReservation() {
         List<Reservation> reservations = reservationRepo.findAll();
-        return reservations;
+        List<ReservationDTO> reservationDTOs = new ArrayList<>();
 
+        for (Reservation reservation : reservations) {
+            // Récupérer la salle et l'utilisateur pour chaque réservation
+            SalleDTO salleDTO = webClient.get()
+                    .uri("http://MSSALLE/api/salle/" + reservation.getSallesIds())
+                    .retrieve()
+                    .bodyToMono(SalleDTO.class)
+                    .block();
+
+            UtilisateurDTO utilisateurDTO = webClient.get()
+                    .uri("http://MSUTILISATEURS/api/utilisateur/" + reservation.getUtilisateurId())
+                    .retrieve()
+                    .bodyToMono(UtilisateurDTO.class)
+                    .block();
+
+            // Convertir la réservation en DTO
+            ReservationDTO reservationDTO = new ReservationDTO();
+            BeanUtils.copyProperties(reservation, reservationDTO);
+
+            // Ajouter la salle et l'utilisateur dans le DTO
+            reservationDTO.setSalles(Collections.singletonList(salleDTO));
+            reservationDTO.setUtilisateurs(Collections.singletonList(utilisateurDTO));
+
+            // Ajouter à la liste finale
+            reservationDTOs.add(reservationDTO);
+        }
+
+        return reservationDTOs;
     }
+
     //--------------------------------------------------
     public Reservation addReservation(ReservationReq reservationReq) {
         Reservation reservation = Reservation.builder()
@@ -74,36 +102,7 @@ public class ReservationServiceImpl implements ReservationService{
         Reservation reservation=reservationRepo.findById(id).orElseThrow(()->new EntityNotFoundException("Reservation with id " + id + " not found"));
         reservationRepo.delete(reservation);
     }
-    //-------------------------------------------------
-    @Override
-    public ReservationDTO getReservationAvecSalleEtUtilisateur(Long id) {
-        Reservation reservation = getReservationById(id);
 
-        // Récupération de la salle
-        SalleDTO salleDTO = webClient.get()
-                .uri("http://MSSALLE/api/salle/" + reservation.getSallesIds())
-                .retrieve()
-                .bodyToMono(SalleDTO.class)
-                .block();
-
-        // Récupération de l'utilisateur
-        UtilisateurDTO utilisateurDTO = webClient.get()
-                .uri("http://MSUTILISATEURS/api/utilisateur/" + reservation.getUtilisateurId())
-                .retrieve()
-                .bodyToMono(UtilisateurDTO.class)
-                .block();
-
-        // Préparation de l'objet ReservationDTO
-        ReservationDTO reservationDTO = new ReservationDTO();
-        BeanUtils.copyProperties(reservation, reservationDTO);
-
-        // Affectation des salles et utilisateurs
-        List<SalleDTO> salles = Collections.singletonList(salleDTO);
-        reservationDTO.setSalles(salles);
-        reservationDTO.setUtilisateurs(Collections.singletonList(utilisateurDTO));
-
-        return reservationDTO;
-    }
     //--------------------------------------------
     @Override
     public List<ReservationDTO> getReservationbySalleId(Long salleId) {
