@@ -1,0 +1,197 @@
+
+services:
+  ## ============= Mysql =================
+  mysql-service:
+    container_name: mysql-container
+    image: mysql:latest
+    restart: unless-stopped
+    volumes:
+      - "./db-data24:/var/lib/mysql"
+      - "./init.sql:/docker-entrypoint-initdb.d/init.sql"
+    ports:
+      - '3307:3306'
+    networks:
+      - microservices-network
+    environment:
+      - MYSQL_ROOT_PASSWORD=ata123
+      - MYSQL_DATABASE=cc_authdb
+
+  ## ============= Phpmyadmin =================
+  php-myadmin-service:
+    container_name: php-myadmin-container
+    depends_on:
+      - mysql-service
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - '7081:80'
+    networks:
+      - microservices-network
+    environment:
+      - PMA_HOST=mysql-container
+      - MYSQL_ROOT_PASSWORD=ata123
+
+  ## ============= Micro-service authentication =================
+  auth_service_mundiatech0:
+    container_name: auth_service_container
+    depends_on:
+      - mysql-service
+      - eureka-service
+    build:
+      context: ./auth-service/
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    networks:
+      - microservices-network
+    ports:
+      - '8095:8095'
+    environment:
+      - spring.datasource.driver-classname=com.mysql.cj.jdbc.Driver
+      - spring.datasource.url=jdbc:mysql://mysql-container:3306/cc_authdb?serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
+      - spring.datasource.username=root
+      - spring.datasource.password=ata123
+      - eureka.client.service-url.defaultZone=http://eureka-container:8761/eureka
+      - eureka.instance.prefer-ip-address=true
+      - spring.jpa.hibernate.ddl-auto=update
+
+  ## ============= Micro-service Reservation =================
+  ms_reservation_mundiatech30:
+    container_name: service_reservation_container
+    depends_on:
+      - mysql-service
+      - eureka-service
+    build:
+      context: ./msReservation/
+      dockerfile: Dockerfile
+    networks:
+      - microservices-network
+    restart: unless-stopped
+    ports:
+      - '8096:8081'
+    environment:
+      - spring.datasource.driver-classname=com.mysql.cj.jdbc.Driver
+      - spring.datasource.url=jdbc:mysql://mysql-container:3306/cc_reservationdb?serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
+      - spring.datasource.username=root
+      - spring.datasource.password=ata123
+      - server.port=8081
+      - eureka.client.service-url.defaultZone=http://eureka-container:8761/eureka
+      - eureka.instance.prefer-ip-address=true
+      - spring.jpa.hibernate.ddl-auto=update
+
+  ## ============= Micro-service Salle =================
+  ms_salle_mundiatech20:
+    container_name: service_salle_container
+    depends_on:
+      - mysql-service
+      - eureka-service
+    build:
+      context: ./msSalle/
+      dockerfile: Dockerfile
+    networks:
+      - microservices-network
+    restart: unless-stopped
+    ports:
+      - '8082:8082'
+    environment:
+      - spring.datasource.driver-classname=com.mysql.cj.jdbc.Driver
+      - spring.datasource.url=jdbc:mysql://mysql-container:3306/cc_salledb?serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
+      - spring.datasource.username=root
+      - spring.datasource.password=ata123
+      - eureka.client.service-url.defaultZone=http://eureka-container:8761/eureka
+      - eureka.instance.prefer-ip-address=true
+      - spring.jpa.hibernate.ddl-auto=update
+
+  ## ============= Micro-service Utilisateurs =================
+  ms_user_mundiatech10:
+    container_name: service_user_container
+    depends_on:
+      - mysql-service
+      - eureka-service
+    build:
+      context: ./msUtilisateurs/
+      dockerfile: Dockerfile
+    networks:
+      - microservices-network
+    restart: unless-stopped
+    ports:
+      - '8083:8083'
+    environment:
+      - spring.datasource.driver-classname=com.mysql.cj.jdbc.Driver
+      - spring.datasource.url=jdbc:mysql://mysql-container:3306/cc_userdb?serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
+      - spring.datasource.username=root
+      - spring.datasource.password=ata123
+      - eureka.client.service-url.defaultZone=http://eureka-container:8761/eureka
+      - eureka.instance.prefer-ip-address=true
+      - spring.jpa.hibernate.ddl-auto=update
+
+
+  ## ============= API Gateway =================
+  api_gateway_service:
+    container_name: api-gateway-container1979
+    depends_on:
+      - eureka-service
+    build:
+      context: ./api-gateway/
+      dockerfile: Dockerfile
+    ports:
+      - '8762:8762'
+    environment:
+      - eureka.client.service-url.defaultZone=http://eureka-container:8761/eureka
+      - eureka.instance.prefer-ip-address=true
+      - spring.cloud.gateway.discovery.locator.enabled=true
+      - spring.cloud.gateway.discovery.locator.lower-case-service-id=true
+
+      - spring.cloud.gateway.routes[0].id=mssalle
+      - spring.cloud.gateway.routes[0].uri=lb://mssalle
+      - spring.cloud.gateway.routes[0].predicates[0]=Path=/api/salle/**
+      - spring.cloud.gateway.routes[0].filters[0]=AuthenticationFilter
+
+      - spring.cloud.gateway.routes[1].id=msreservation
+      - spring.cloud.gateway.routes[1].uri=lb://msreservation
+      - spring.cloud.gateway.routes[1].predicates[0]=Path=/api/reservation/**
+      - spring.cloud.gateway.routes[1].filters[0]=AuthenticationFilter
+
+      - spring.cloud.gateway.routes[2].id=msutilisateurs
+      - spring.cloud.gateway.routes[2].uri=lb://msutilisateurs
+      - spring.cloud.gateway.routes[2].predicates[0]=Path=/api/utilisateur/**
+      - spring.cloud.gateway.routes[2].filters[0]=AuthenticationFilter
+
+
+      - spring.cloud.gateway.routes[3].id=auth-service
+      - spring.cloud.gateway.routes[3].uri=lb://auth-service
+      - spring.cloud.gateway.routes[3].predicates[0]=Path=/api/auth/**
+      - spring.cloud.gateway.routes[3].filters[0]=AuthenticationFilter
+
+      - spring.cloud.gateway.globalcors.cors-configurations.[/**].allowed-origins=http://localhost:3000
+      - spring.cloud.gateway.globalcors.cors-configurations.[/**].allowed-methods=GET,POST,PUT,DELETE,OPTIONS
+      - spring.cloud.gateway.globalcors.cors-configurations.[/**].allowed-headers=*
+      - spring.cloud.gateway.globalcors.cors-configurations.[/**].allow-credentials=true
+
+    networks:
+      - microservices-network
+    restart: unless-stopped
+
+  ## ============= Eureka Service =================
+  eureka-service:
+    container_name: eureka-container
+    build:
+      context: ./EurekaServer/
+      dockerfile: Dockerfile
+    ports:
+      - '8761:8761'
+    networks:
+      - microservices-network
+    restart: always
+
+  ## ============= Frontend =================
+  app:
+    container_name: react-nginx-container-prod
+    image: react-nginx-prod
+    build:
+      context: ./univ/
+    ports:
+      - '3000:80'
+
+networks:
+  microservices-network:
+    driver: bridge
