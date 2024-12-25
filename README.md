@@ -136,7 +136,7 @@ Un système de sécurité basé sur **JWT (JSON Web Token)** est utilisé pour a
 - **JWT** : Authentification et sécurité.
 - **Lombok** : Réduction du code boilerplate.
 - **PostgreSQL/MySQL** : Base de données relationnelle.
-- **React** : Frontend (optionnel).
+- **React** : Frontend.
 - **Exchange Rate API** : Tiers pour les taux de change.
 
 ---
