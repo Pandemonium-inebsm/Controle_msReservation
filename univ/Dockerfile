@@ -1,4 +1,4 @@
-FROM node:latest as mundia_node
+FROM node:latest AS mundia_node
 # Définir le répertoire de travail dans le conteneur
 WORKDIR /app
 # Copiez package.json dans le répertoire de travail
